@@ -31,20 +31,17 @@ class MigrationApplyCommand extends ContainerAwareCommand
             $output->writeln("Migrations table is not created. Run following command to create it:");
             $output->writeln("  <comment>app/console migration:init</comment>");
         } else {
+            $files = array();
             $e = null;
             try {
-                $files = $migration->apply();
+                $files = $migration->apply($output);
             } catch (\Exception $e) {
+                $output->writeln('<error>FAIL</error>');
             }
 
             if (0 === count($files)) {
                 $output->writeln("No migrations were applied");
-            } else {
-                $output->writeln("Applied migrations:");
-                foreach ($files as $file) {
-                    $output->writeln("  <info>" .basename($file). "</info>");
-                }
-            }
+            } 
 
             if (null !== $e) {
                 throw $e;

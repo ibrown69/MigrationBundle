@@ -140,7 +140,7 @@ EOT;
      * 
      * @return void
      */
-    public function apply()
+    public function apply($output)
     {
         $this->updateList();
         $files = array();
@@ -153,10 +153,12 @@ EOT;
             $filename = $this->migrationsDir . '/' . $this->generateMigrationFilename($row['timestamp']);
 
             if (file_exists($filename)) {
+                $output->write("Applying file <comment>" . basename($filename) . '</comment> ');
                 $this->dbal->beginTransaction();
                 $this->dbal->exec(file_get_contents($filename));
                 $this->markActive($row['id'], true);
                 $this->dbal->commit();
+                $output->writeln("<info>OK</info>");
                 $files[] = $filename;
             }
         }
