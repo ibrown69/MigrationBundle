@@ -9,11 +9,13 @@ class Migration
 {
     protected $dbal;
     protected $tableName;
+    protected $migrationsDir;
     
-    function __construct($dbal, $tableName)
+    function __construct($dbal, $tableName, $migrationsDir)
     {
         $this->dbal = $dbal;
         $this->tableName = $tableName;
+        $this->migrationsDir = $migrationsDir;
     }
 
     /**
@@ -55,5 +57,36 @@ EOT;
 
         $statement = $this->dbal->prepare($query);
         return $statement->execute();
+    }
+
+    /**
+     * Create new migration script.
+     * 
+     * @return string Migration filename
+     */
+    public function createMigration()
+    {
+        //Create directory if it does not exist
+        if (false === file_exists($this->migrationsDir)) {
+            mkdir($this->migrationsDir, 0777, true);
+        }
+
+        $path = $this->migrationsDir . '/' . $this->generateMigrationFilename();
+        if (file_exists($path)) {
+            throw new \Exception("File already exists");
+        }
+        file_put_contents($path, '');
+
+        return realpath($path);
+    }
+
+    /**
+     * Generate filename for new migration script.
+     * 
+     * @return string
+     */
+    protected function generateMigrationFilename()
+    {
+        return sprintf('%s.sql', date("YmdHis"));
     }
 }
