@@ -82,6 +82,8 @@ EOT;
 
     /**
      * Generate filename for new migration script.
+     *
+     * @param int $timestamp Timestamp
      * 
      * @return string
      */
@@ -99,7 +101,7 @@ EOT;
     {
         $files = $this->getFiles();
 
-        $query = "INSERT IGNORE INTO `migrations` (`timestamp`, `active`) VALUES (:timestamp, '0');";
+        $query = "INSERT IGNORE INTO `{$this->tableName}` (`timestamp`, `active`) VALUES (:timestamp, '0');";
         $statement = $this->dbal->prepare($query);
         foreach ($files as $file) {
             if (1 == preg_match("/\d+/", $file, $match)) {
@@ -135,5 +137,35 @@ EOT;
     public function apply()
     {
         $this->updateList();
+
+        $query = "SELECT `id`, `timestamp` FROM {$this->tableName} WHERE `active` = 0 ORDER BY `timestamp` ASC";
+        $statement = $this->dbal->prepare($query);
+        $statement->execute();
+
+        while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
+            $filename = realpath($this->migrationsDir . '/' . preg_replace('/[^\d]/', '', $row['timestamp']) . '.sql');
+
+            if (file_exists($filename)) {
+                $this->dbal->beginTransaction();
+                $this->dbal->exec(file_get_contents($filename));
+                $this->markActive($row['id'], true);
+                $this->dbal->commit();
+            }
+        }
+    }
+
+    /**
+     * Mark migration as active/inactive.
+     *  
+     * @param int  $id     Migration id
+     * @param bool $active Status
+     */
+    protected function markActive($id, $active = true) {
+        $query = "UPDATE {$this->tableName} SET `active` = :active WHERE id = :id";
+
+        $statement = $this->dbal->prepare($query);
+        $statement->bindValue(':active', (int)$active);
+        $statement->bindValue(':id', $id, \PDO::PARAM_INT);
+        $statement->execute();
     }
 }
