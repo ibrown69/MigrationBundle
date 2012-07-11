@@ -87,9 +87,15 @@ EOT;
      * 
      * @return string
      */
-    protected function generateMigrationFilename()
+    protected function generateMigrationFilename($timestamp = null)
     {
-        return sprintf('%s.sql', date("YmdHis"));
+        if ($timestamp) {
+            $timestamp = preg_replace('/[^\d]/', '', $timestamp);
+        } else {
+            $timestamp = date("YmdHis");
+        }
+
+        return sprintf('%s.sql', $timestamp);
     }
 
     /**
@@ -137,21 +143,25 @@ EOT;
     public function apply()
     {
         $this->updateList();
+        $files = array();
 
         $query = "SELECT `id`, `timestamp` FROM {$this->tableName} WHERE `active` = 0 ORDER BY `timestamp` ASC";
         $statement = $this->dbal->prepare($query);
         $statement->execute();
 
         while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
-            $filename = realpath($this->migrationsDir . '/' . preg_replace('/[^\d]/', '', $row['timestamp']) . '.sql');
+            $filename = $this->migrationsDir . '/' . $this->generateMigrationFilename($row['timestamp']);
 
             if (file_exists($filename)) {
                 $this->dbal->beginTransaction();
                 $this->dbal->exec(file_get_contents($filename));
                 $this->markActive($row['id'], true);
                 $this->dbal->commit();
+                $files[] = $filename;
             }
         }
+
+        return $files;
     }
 
     /**
