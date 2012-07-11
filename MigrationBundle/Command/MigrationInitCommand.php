@@ -1,37 +1,40 @@
 <?php
 namespace Estina\MigrationBundle\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MigrationInitCommand extends Command
+class MigrationInitCommand extends ContainerAwareCommand
 {
+    /**
+     * @see ContainerAwareCommand
+     */
     protected function configure()
     {
         $this
             ->setName('migration:init')
-            ->setDescription('Greet someone')
-            ->addArgument('name', InputArgument::OPTIONAL, 'Who do you want to greet?')
-            ->addOption('yell', null, InputOption::VALUE_NONE, 'If set, the task will yell in uppercase letters')
+            ->setDescription('Create migrations table');
         ;
     }
 
+    /**
+     * @see ContainerAwareCommand
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $name = $input->getArgument('name');
-        if ($name) {
-            $text = 'Hello '.$name;
+        $migration = $this->getContainer()->get('estina_migration.service.migration');
+        if (false === $migration->isTableCreated()) {
+            $output->write('Creating migrations table ');
+            if ($migration->createTable()) {
+                $output->writeln('<info>OK</info>');
+            } else {
+                $output->writeln('<info>FAIL</info>');
+            }
         } else {
-            $text = 'Hello';
+            $output->writeln('<comment>Migrations table already created.</comment>');
         }
-
-        if ($input->getOption('yell')) {
-            $text = strtoupper($text);
-        }
-
-        $output->writeln($text);
     }
 }
