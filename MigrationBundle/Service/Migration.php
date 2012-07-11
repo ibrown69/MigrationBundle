@@ -89,4 +89,51 @@ EOT;
     {
         return sprintf('%s.sql', date("YmdHis"));
     }
+
+    /**
+     * Update migrations list to database.
+     * 
+     * @return void
+     */
+    protected function updateList()
+    {
+        $files = $this->getFiles();
+
+        $query = "INSERT IGNORE INTO `migrations` (`timestamp`, `active`) VALUES (:timestamp, '0');";
+        $statement = $this->dbal->prepare($query);
+        foreach ($files as $file) {
+            if (1 == preg_match("/\d+/", $file, $match)) {
+                $statement->bindValue(':timestamp', $match[0], \PDO::PARAM_INT);
+                $statement->execute();
+            }
+        }
+    }
+
+    /**
+     * Return list of available migration files.
+     * 
+     * @return array
+     */
+    protected function getFiles()
+    {
+         $filenames = array();
+         $iterator = new \DirectoryIterator($this->migrationsDir);
+         foreach ($iterator as $fileinfo) {
+             if ($fileinfo->isFile() && $fileinfo->getSize() > 0) {
+                 $filenames[] = $fileinfo->getFilename();
+             }
+         }
+
+         return $filenames;
+    }
+
+    /**
+     * Apply all inactive migrations.
+     * 
+     * @return void
+     */
+    public function apply()
+    {
+        $this->updateList();
+    }
 }
