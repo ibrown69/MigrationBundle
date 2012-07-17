@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="estina_migration.service.migration.class">Estina\MigrationBundle\Service\Migration</parameter>
+        <parameter key="estina_migration.table_name">estina_migrations</parameter>
+        <parameter key="estina_migration.migrations_dir">%kernel.root_dir%</parameter>
+    </parameters>
+
+    <services>
+        <service id="estina_migration.service.migration" class="%estina_migration.service.migration.class%">
+            <argument type="service" id="doctrine.dbal.default_connection" />
+            <argument>%estina_migration.table_name%</argument>
+            <argument>%estina_migration.migrations_dir%/../schema/migrations</argument>
+        </service>
+    </services>
+</container>
