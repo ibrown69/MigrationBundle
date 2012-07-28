@@ -165,7 +165,26 @@ EOT;
 
         return $files;
     }
+    public function setup($output)
+    {
 
+        $files = array('structure.sql', 'data.sql');
+
+        foreach($files as $filename) {
+            $filename = $this->migrationsDir . '/../' .$filename;
+            if (file_exists($filename)) {
+                echo $filename;
+                $output->write("Applying file <comment>" . basename($filename) . '</comment> ');
+                $this->dbal->beginTransaction();
+                $this->dbal->exec(file_get_contents($filename));
+                //$this->markActive($row['id'], true);
+                $this->dbal->commit();
+                $output->writeln("<info>OK</info>");
+                $files[] = $filename;
+            }
+        }
+        return $files;
+    }
     /**
      * Mark migration as active/inactive.
      *  
