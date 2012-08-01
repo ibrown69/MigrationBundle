@@ -13,32 +13,21 @@ Install
 
 1. Use [Composer](http://getcomposer.org/) package manager to download bundle:
 
-Add repository to `composer.json`:
+Add repository and bundle requirement to `composer.json`:
 
 ```json
-"repositories": [
-    {
-        "type": "package",
-        "package": {
-            "name": "Estina/MigrationBundle",
-            "version": "master",
-            "source": {
-                "url": "git://github.com/Estina/MigrationBundle.git",
-                "type": "git",
-                "reference": "master"
-            }
+{
+    ...
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "http://github.com/Estina/MigrationBundle"
         }
+    ],
+    "require": {
+        "Estina/MigrationBundle": "*"
     }
-]
-```
-
-Add bundle to requirements:
-
-```json
-"require": {
-    "Estina/MigrationBundle": "*"
 }
-```
 
 2. Create `schema/migrations` folders on project root dir.
 
