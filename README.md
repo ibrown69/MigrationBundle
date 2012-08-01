@@ -15,7 +15,7 @@ Install
 
 Add repository to `composer.json`:
 
-    ``` json
+    ```json
     "repositories": [
         {
             "type": "package",
@@ -34,7 +34,7 @@ Add repository to `composer.json`:
 
 Add bundle to requirements:
 
-    ``` json
+    ```json
     "require": {
         "Estina/MigrationBundle": "*"
     }
@@ -45,23 +45,23 @@ Add bundle to requirements:
 Usage
 -----
 
-    ``` sh
+    ```sh
 	migration:init
     ```
     Create migration table on database if it is not created yet.
 
-    ``` sh
+    ```sh
 	migration:setup
     ```
     Import `schema.sql` and `data.sql` to database.
 
 
-    ``` sh
+    ```sh
 	migration:new
     ```
     Create a new migration file.
 
-    ``` sh
+    ```sh
 	migration:apply
     ```
     Apply migration scripts which were not applied.
