@@ -45,23 +45,22 @@ Add bundle to requirements:
 Usage
 -----
 
+Create migration table on database if it is not created yet.
 ```sh
 migration:init
 ```
-Create migration table on database if it is not created yet.
 
+Import `schema.sql` and `data.sql` to database.
 ```sh
 migration:setup
 ```
-Import `schema.sql` and `data.sql` to database.
 
-
+Create a new migration file.
 ```sh
 migration:new
 ```
-Create a new migration file.
 
+Apply migration scripts which were not applied.
 ```sh
 migration:apply
 ```
-Apply migration scripts which were not applied.
