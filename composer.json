@@ -17,6 +17,5 @@
     },
     "autoload": {
         "psr-0": { "Estina\\MigrationBundle": "" }
-    },
-    "target-dir": "Estina/MigrationBundle"
+    }
 }
