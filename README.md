@@ -25,7 +25,7 @@ Add repository and bundle requirement to `composer.json`:
         }
     ],
     "require": {
-        "Estina/MigrationBundle": "*"
+        "estina/migration-bundle": "*"
     }
 }
 
