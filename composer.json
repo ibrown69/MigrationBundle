@@ -1,5 +1,5 @@
 {
-    "name": "Estina/MigrationBundle",
+    "name": "estina/migration-bundle",
     "description": "MySQL migrations bundle",
     "keywords": ["db","database","mysql","migration","sql"],
     "homepage": "http://github.com/Estina/MigrationBundle",
@@ -18,5 +18,5 @@
     "autoload": {
         "psr-0": { "Estina\\MigrationBundle": "" }
     },
-    "target-dir": "/"
+    "target-dir": "Estina/MigrationBundle"
 }
