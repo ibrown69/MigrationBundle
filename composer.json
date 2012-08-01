@@ -1,0 +1,18 @@
+{
+    "name": "Estina/MigrationBundle",
+    "description": "MySQL migrations bundle",
+    "keywords": ["db","database","mysql","migration","sql"],
+    "homepage": "http://github.com/Estina/MigrationBundle",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Povilas Balzaravičius",
+            "email": "pavvka@gmail.com",
+            "homepage": "http://pawka.linija.net/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    }
+}
