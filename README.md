@@ -28,6 +28,7 @@ Add repository and bundle requirement to `composer.json`:
         "estina/migration-bundle": "*"
     }
 }
+```
 
 2. Create `schema/migrations` folders on project root dir.
 
